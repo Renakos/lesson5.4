@@ -32,7 +32,7 @@ class MainFragment : Fragment() {
 
         viewModel.getCharacters()
         characterAdapter.updateData(viewModel.charactersList)
-
+        binding.errorTextView.text = null
         setupRecyclerView()
         viewModel.uistate.observe(viewLifecycleOwner) { uiState ->
             if (!uiState.isLoading) {

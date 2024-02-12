@@ -13,9 +13,11 @@ object RetrofitClient {
     private const val BASE_URL = "https://rickandmortyapi.com/"
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().setLevel(
-            HttpLoggingInterceptor.Level.BODY
-        ))
+        .addInterceptor(
+            HttpLoggingInterceptor().setLevel(
+                HttpLoggingInterceptor.Level.BODY
+            )
+        )
         .connectTimeout(60L, TimeUnit.SECONDS)
         .readTimeout(60L, TimeUnit.SECONDS)
         .writeTimeout(60L, TimeUnit.SECONDS)
@@ -27,5 +29,6 @@ object RetrofitClient {
         .client(okHttpClient)
         .build()
 
-    val rickAndMortyApiService: RickAndMortyApiService = retrofit.create(RickAndMortyApiService::class.java)
+    val rickAndMortyApiService: RickAndMortyApiService =
+        retrofit.create(RickAndMortyApiService::class.java)
 }

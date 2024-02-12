@@ -1,24 +1,22 @@
 package com.example.lesson54.ui.fragment
 
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.lesson54.data.model.Character
 import com.example.lesson54.data.viewmodel.MainViewModel
 import com.example.lesson54.databinding.FragmentMainBinding
 import com.example.lesson54.ui.adapter.CharacterAdapter
-import com.example.lesson54.utils.UiState
 
 class MainFragment : Fragment() {
 
     private val viewModel: MainViewModel by viewModels()
-    private lateinit var characterAdapter: CharacterAdapter
+    private var characterAdapter = CharacterAdapter()
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(
@@ -32,38 +30,30 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getCharacters()
+        characterAdapter.updateData(viewModel.charactersList)
+
         setupRecyclerView()
-
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            handleUiState(it)
+        viewModel.uistate.observe(viewLifecycleOwner) { uiState ->
+            if (!uiState.isLoading) {
+                binding.progressBar.isInvisible = true
+                binding.recyclerView.isVisible = true
+                if (uiState.success!!.isNotEmpty()) {
+                    Log.e("uiState", "onViewCreated: successful ${uiState.success}")
+                    characterAdapter.updateData(uiState.success)
+                    binding.errorTextView.visibility = View.GONE
+                } else {
+                    Log.e("uiState", "onViewCreated: error ${uiState.errorMessage}")
+                    binding.errorTextView.text = uiState.errorMessage
+                }
+            } else {
+                Log.e("uiState", "onViewCreated: loading")
+                binding.progressBar.isVisible = true
+            }
         }
-
-        viewModel.fetchData()
     }
 
     private fun setupRecyclerView() {
-        characterAdapter = CharacterAdapter(emptyList())
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = characterAdapter
-    }
-
-    private fun handleUiState(uiState: UiState<List<Character>>) {
-        if (uiState.isLoading) {
-            Log.e("loading", "success")
-            binding.progressBar.visibility = View.VISIBLE
-            binding.recyclerView.visibility = View.GONE
-            binding.errorTextView.visibility = View.GONE
-        } else if (uiState.success != null) {
-            Log.e("success", "success")
-            characterAdapter.updateData(uiState.success)
-            binding.progressBar.visibility = View.GONE
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.errorTextView.visibility = View.GONE
-        } else {
-            binding.progressBar.visibility = View.GONE
-            binding.recyclerView.visibility = View.GONE
-            binding.errorTextView.visibility = View.VISIBLE
-            binding.errorTextView.text = uiState.errorMessage ?: "Неизвестная ошибка"
-        }
     }
 }

@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson54.R
-import com.example.lesson54.data.model.Character
+import com.example.lesson54.data.model.ResultsItem
 
-class CharacterAdapter(private var characters: List<Character>) :
+class CharacterAdapter :
     RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
 
+    private var characters = listOf<ResultsItem>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_character, parent, false)
@@ -26,7 +27,7 @@ class CharacterAdapter(private var characters: List<Character>) :
         return characters.size
     }
 
-    fun updateData(newData: List<Character>) {
+    fun updateData(newData: List<ResultsItem>) {
         characters = newData
         notifyDataSetChanged()
     }
@@ -37,9 +38,9 @@ class CharacterAdapter(private var characters: List<Character>) :
         private val characterSpeciesTextView: TextView =
             itemView.findViewById(R.id.characterSpeciesTextView)
 
-        fun bind(character: Character) {
-            characterNameTextView.text = character.name
-            characterSpeciesTextView.text = character.species
+        fun bind(resultsItem: ResultsItem) {
+            characterNameTextView.text = resultsItem.name
+            characterSpeciesTextView.text = resultsItem.species
         }
     }
 }

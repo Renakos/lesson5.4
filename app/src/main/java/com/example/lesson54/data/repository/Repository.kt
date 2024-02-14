@@ -11,21 +11,6 @@ import retrofit2.Response
 class Repository {
 
     private val apiService = RetrofitClient.rickAndMortyApiService
-
-//    fun getResultsItems(callback: CustomCallback<List<ResultsItem>>) {
-//        apiService.getResultsItems().enqueue(object : Callback<List<ResultsItem>> {
-//            override fun onResponse(call: Call<List<ResultsItem>>, response: Response<List<ResultsItem>>) {
-//                if (response.isSuccessful && response.body() != null) {
-//                    callback.onResponse(response.body()!!)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<ResultsItem>>, t: Throwable) {
-//                callback.onFailure(t)
-//            }
-//        })
-//    }
-
     fun getResultsItems(
         onResponse: (resultsItems: List<ResultsItem>) -> Unit,
         onFailure: (t: Throwable) -> Unit

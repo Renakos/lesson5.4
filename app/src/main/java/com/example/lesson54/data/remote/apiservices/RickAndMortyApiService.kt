@@ -4,11 +4,11 @@ import com.example.lesson54.data.model.CharactersResponse
 import retrofit2.Call
 import retrofit2.http.GET
 
-private const val POSTS_END_POINT = "api/character"
+private const val CHARACTERS_END_POINT = "api/character"
 
 interface RickAndMortyApiService {
 
-    @GET(POSTS_END_POINT)
+    @GET(CHARACTERS_END_POINT)
     fun getCharacters(): Call<CharactersResponse>
 
 }
